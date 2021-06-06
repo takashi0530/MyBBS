@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PostController::class, 'index'])
+    ->name('posts.index');
+
+// 通常のidを渡す方法
+// Route::get('/posts/{id}', [PostController::class, 'show'])
+//     ->name('posts.show');
+
+// Implicit Binding の仕組みを使ってモデルと紐付ける方法   ※URLからわたされたidをもとに暗黙的にモデルのデータを結びつけてくれる
+Route::get('/posts/{post}', [PostController::class, 'show'])
+    ->name('posts.show');
