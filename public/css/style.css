@@ -1,3 +1,7 @@
+a {
+    text-decoration: none;
+}
+
 .container {
     width: 480px;
     margin: 40px auto;
@@ -8,6 +12,14 @@ h1 {
     font-size: 18px;
     margin: 16px 0;
     padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+h1 > a {
+    font-style: 16px;
+    font-weight: normal;
+    margin-left: auto;
 }
 
 li {
@@ -22,6 +34,62 @@ li {
 p {
     line-height: 1.6;
 }
+
+
+input,
+textarea {
+    padding: 4px;
+    width: 100%;
+    /* box-sizing: border-box; */
+}
+
+textarea {
+    height: 160px;
+}
+
+button {
+    padding: 4px 8px;
+    font-style: 14px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-button {
+    text-align: right;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.button {
+    /* ボタンのボーダーを無くす */
+    border: none;
+    /* ボタンの背景色を無くす */
+    background: transparent;
+    font-size: 16px;
+    color: #1155cc;
+    font-weight: normal;
+    cursor: pointer;
+    /* ボタンの上下のズレを調整 */
+    vertical-align: 1px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

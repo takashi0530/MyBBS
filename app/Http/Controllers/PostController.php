@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Http\Requests\PostRequest;
 
 class PostController extends Controller
 {
@@ -14,9 +15,10 @@ class PostController extends Controller
     //     'title c',
     // ];
 
-    // トップページ
-    public function index() {
 
+    // トップページ
+    public function index()
+    {
         // Postsテーブルの全てのレコードを取得する
         // $posts = Post::all();
 
@@ -45,8 +47,69 @@ class PostController extends Controller
     }
 
 
+    // 追加ページ
+    public function create()
+    {
+        return view('posts.create');
+    }
 
 
+    // 記事投稿
+    public function store(PostRequest $request)
+    {
+        // Postモデル（クラス）をインスタンス化
+        $post = new Post();
+
+        // タイトルを代入
+        $post->title = $request->title;
+
+        // 本文を代入
+        $post->body = $request->body;
+
+        // レコードをINSERTする
+        $post->save();
+
+        // トップページへリダイレクト
+        return redirect()
+            ->route('posts.index');
+    }
+
+    // 記事編集
+    public function edit(Post $post)
+    {
+        // Implicit Binding  を使用すると、以下の処理が不要になる
+        // $post = Post::findOrFail($id);
+
+        return view('posts.edit')
+            ->with(['post' => $post]);
+    }
+
+
+    // 記事更新処理
+    public function update(PostRequest $request, Post $post)
+    {
+        // タイトルを代入
+        $post->title = $request->title;
+
+        // 本文を代入
+        $post->body = $request->body;
+
+        // レコードをINSERTする
+        $post->save();
+
+        // トップページへリダイレクト
+        return redirect()
+            ->route('posts.show', $post);
+    }
+
+    // 投稿詳細ページから投稿の削除ボタンをおしたとき
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return redirect()
+            ->route('posts.index');
+    }
 
 
 
