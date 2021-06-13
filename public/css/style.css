@@ -22,6 +22,11 @@ h1 > a {
     margin-left: auto;
 }
 
+h2 {
+    font-style: 16px;
+    margin-top: 40px;
+}
+
 li {
     line-height: 1.6;
     margin-bottom: 8px;
@@ -77,9 +82,20 @@ button {
     cursor: pointer;
     /* ボタンの上下のズレを調整 */
     vertical-align: 1px;
-
 }
 
+.comment-form {
+    display: flex;
+}
+
+.comment-form > button {
+    margin-left: 8px;
+}
+
+/* コメントの横に[x]ボタンを配置する */
+.delete-comment {
+    display: inline-block;
+}
 
 
 

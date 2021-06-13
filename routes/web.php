@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,13 +44,21 @@ Route::get('/posts/{post}/edit', [PostController::class, 'edit'])
     ->name('posts.edit')
     ->where('post', '[0-9]+');
 
-// 投稿編集ページから更新したとき  ※データの一部を更新するときは、POST形式ではなくてPATHC形式にする
+// 投稿編集ページから更新ボタンを押したとき   ※データの一部を更新するときは、POST形式ではなくてPATCH形式にする
 Route::patch('/posts/{post}/update', [PostController::class, 'update'])
     ->name('posts.update')
     ->where('post', '[0-9]+');
 
-// 投稿詳細ページから削除ボタンを押したとき
+// 投稿詳細ページから削除ボタンを押したとき ※データの削除をする場合はdelete形式
 Route::delete('/posts/{post}/destroy', [PostController::class, 'destroy'])
     ->name('posts.destroy')
     ->where('post', '[0-9]+');
 
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
+    ->name('comments.store')
+    ->where('post', '[0-9]+');
+
+// 投稿詳細ページのコメント一覧にある[X]削除ボタンを押したとき
+Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy'])
+    ->name('comments.destroy')
+    ->where('comment', '[0-9]+');

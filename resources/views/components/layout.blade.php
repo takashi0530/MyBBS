@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -16,7 +15,6 @@
     <div class="container">
         {{ $slot }}
     </div>
-
 
 </body>
 </html>

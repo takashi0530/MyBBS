@@ -15,4 +15,11 @@ class Post extends Model
         'title',
         'body',
     ];
+
+    // リレーション設定  postsテーブルとcommentsテーブルをかんたんに操作できるようにする   （$post->comment 投稿に紐付いたコメントを取得できる）
+    public function comments()
+    {
+        // 特定のpostに対してcommentは複数あるため hasMany    classキーワード：クラスの名前が文字列で渡される
+        return $this->hasMany(Comment::class);
+    }
 }
