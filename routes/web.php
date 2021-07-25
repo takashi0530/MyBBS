@@ -35,7 +35,7 @@ Route::get('/posts/create', [PostController::class, 'create'])
     ->name('posts.create');
 
 
-// 新規投稿ページから投稿がしたとき  ※データを新規作成するときはPOST形式
+// 新規投稿ページから投稿したとき  ※データを新規作成するときはPOST形式
 Route::post('/posts/store', [PostController::class, 'store'])
     ->name('posts.store');
 
@@ -62,3 +62,8 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
 Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy'])
     ->name('comments.destroy')
     ->where('comment', '[0-9]+');
+
+
+// 投稿検索
+Route::post('/', [PostController::class, 'search'])
+    ->name('posts.search');

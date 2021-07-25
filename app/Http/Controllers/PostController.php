@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 // PostRequestクラスを使用する
 use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\DB;
+
 
 class PostController extends Controller
 {
@@ -68,6 +70,8 @@ class PostController extends Controller
     {
         return view('posts.create');
     }
+
+
 
 
     // 記事投稿
@@ -139,6 +143,20 @@ class PostController extends Controller
             ->route('posts.index');
     }
 
+    // 投稿を検索
+    public function search(Request $request)
+    {
+        // postされた検索ワードを取得
+        $search_title = $request->input('search_title');
 
+        // 検索ワードに該当するレコードを全て取得する
+        $posts = DB::table('posts')
+            ->where('title', 'like', '%' . $search_title . '%')
+            ->latest()
+            ->get();
+
+        return view('index')
+            ->with(['posts' => $posts]);
+    }
 
 }
