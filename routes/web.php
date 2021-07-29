@@ -63,7 +63,6 @@ Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy
     ->name('comments.destroy')
     ->where('comment', '[0-9]+');
 
-
-// 投稿検索
+// 投稿を検索
 Route::post('/', [PostController::class, 'search'])
     ->name('posts.search');

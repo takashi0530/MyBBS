@@ -30,14 +30,20 @@ h2 {
 li {
     line-height: 1.6;
     margin-bottom: 8px;
+    list-style: none;
+    display: flex;
 }
 
 .back-link {
     font-size: 14px;
 }
 
-p {
+.container > p {
     line-height: 1.6;
+}
+
+li > span {
+    margin-left: auto;
 }
 
 

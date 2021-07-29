@@ -32,6 +32,8 @@
                     {{ $post->title }}
                 </a>
 
+                <span>{{ $post->created_at }}</span>
+
             </li>
         @empty
             <li>postがありません</li>
