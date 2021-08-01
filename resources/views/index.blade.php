@@ -6,7 +6,7 @@
     </x-slot>
 
     <h1>
-        <span>My BBS</span>
+        <span><a href="{{ route('posts.index') }}">My BBS</a></span>
         <a href="{{ route('posts.create') }}">[新規投稿]</a>
     </h1>
 
@@ -19,6 +19,10 @@
     </form>
 
     <ul>
+        <li>
+            <a href="{{ route('posts.index') }}?sort=title">タイトル順</a>
+            <span><a href="{{ route('posts.index') }}?sort=created_at">投稿日順</a></span>
+        </li>
         @forelse ($posts as $post)
             <li>
 
@@ -38,5 +42,9 @@
         @empty
             <li>postがありません</li>
         @endforelse
+
     </ul>
+    {{-- {{ $posts->appends(['sort' => $sort])->links('pagination::bootstrap-4') }} --}}
+    {{-- {{ $posts->appends(['sort' => $sort])->links('pagination::tailwind') }} --}}
+    {{ $posts->appends(['sort' => $sort])->links() }}
 </x-layout>

@@ -20,20 +20,43 @@ class PostController extends Controller
 
 
     // トップページ
-    public function index()
+    public function index(Request $request)
     {
         // Postsテーブルの全てのレコードを取得する
         // $posts = Post::all();
 
         // Postsテーブルの値を全て取得し、order BYでソートする ※以下2つは同じ意味 下が短くかける
         // $posts = Post::orderBy('created_at', 'desc')->get();
-        $posts = Post::latest()->get();
+        // $posts = Post::latest()->get();
 
         // sqlクエリの確認方法
         // $sql = Post::where('id', 1)->toSql();
 
+        // ページャーを利用して表示する ※simplePaginateメソッドは常に最後に呼び出す
+        // $posts = DB::table('posts')->orderBy('created_at', 'desc')->simplePaginate(3);
+
+        $sort = $request->sort;
+        pr($sort);
+
+        // タイトルのソートボタンがおされたとき タイトル順
+        if ($sort === 'title') {
+            $order = 'asc';
+        }
+
+        // ソートボタンが押されていない初期表示 もしくは 投稿日のソートボタンがおされたとき 投稿日順
+        if ($sort === null || $sort === 'created_at') {
+            $sort = 'created_at';
+            $order = 'desc';
+        }
+        // $posts = Post::orderBy($sort, $order)->simplePaginate(4);
+        $posts = DB::table('posts')->orderBy($sort, $order)->paginate(4);
+        // $posts = Post::paginate(4);
+
         return view('index')
-            ->with(['posts' => $posts]);
+            ->with([
+                'posts' => $posts,
+                'sort' => $sort
+            ]);
     }
 
 

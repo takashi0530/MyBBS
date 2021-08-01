@@ -27,10 +27,14 @@ h2 {
     margin-top: 40px;
 }
 
+ul {
+    /* list-style: none; */
+    padding-inline-start: 0;
+}
+
 li {
     line-height: 1.6;
     margin-bottom: 8px;
-    list-style: none;
     display: flex;
 }
 
