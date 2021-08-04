@@ -35,8 +35,12 @@
                 <form method="post" action="{{ route('comments.store', $post) }}" class="comment-form">
                     {{-- フォームは必ず@csrfをつける --}}
                     @csrf
-                    <input type="text" name="body">
-                    <button>コメントを追加</button>
+                    {{-- <input type="text" name="body"> --}}
+                    <input type="text" name="body" class="border border-gray-600 rounded-sm shadow">
+                    {{-- <button>コメントを追加</button> --}}
+                    <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm w-2/12">
+                        コメントを追加
+                    </button>
                 </form>
             </li>
 

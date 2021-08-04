@@ -22,21 +22,18 @@ class PostController extends Controller
     // トップページ
     public function index(Request $request)
     {
-        // Postsテーブルの全てのレコードを取得する
-        // $posts = Post::all();
-
         // Postsテーブルの値を全て取得し、order BYでソートする ※以下2つは同じ意味 下が短くかける
         // $posts = Post::orderBy('created_at', 'desc')->get();
         // $posts = Post::latest()->get();
 
-        // sqlクエリの確認方法
-        // $sql = Post::where('id', 1)->toSql();
-
         // ページャーを利用して表示する ※simplePaginateメソッドは常に最後に呼び出す
         // $posts = DB::table('posts')->orderBy('created_at', 'desc')->simplePaginate(3);
 
+        // ?sort=title パラメーター部分を取得
         $sort = $request->sort;
-        pr($sort);
+
+        // 検索した文字列を取得
+        $keyword = $request->keyword;
 
         // タイトルのソートボタンがおされたとき タイトル順
         if ($sort === 'title') {
@@ -48,14 +45,27 @@ class PostController extends Controller
             $sort = 'created_at';
             $order = 'desc';
         }
-        // $posts = Post::orderBy($sort, $order)->simplePaginate(4);
-        $posts = DB::table('posts')->orderBy($sort, $order)->paginate(4);
-        // $posts = Post::paginate(4);
+
+        // 検索ボタンがおされたとき
+        if ($keyword !== null) {
+            $posts = DB::table('posts')
+                ->where('title', 'like', '%' . $keyword . '%')
+                ->orderBy($sort, $order)
+                ->paginate(4);
+        }
+
+        // 検索ボタンが押されていないとき
+        if ($keyword === null) {
+            $posts = DB::table('posts')
+                ->orderBy($sort, $order)
+                ->paginate(4);
+        }
 
         return view('index')
             ->with([
                 'posts' => $posts,
-                'sort' => $sort
+                'sort' => $sort,
+                'keyword' => $keyword
             ]);
     }
 
@@ -166,20 +176,5 @@ class PostController extends Controller
             ->route('posts.index');
     }
 
-    // 投稿を検索
-    public function search(Request $request)
-    {
-        // postされた検索ワードを取得
-        $search_title = $request->input('search_title');
-
-        // 検索ワードに該当するレコードを全て取得する
-        $posts = DB::table('posts')
-            ->where('title', 'like', '%' . $search_title . '%')
-            ->latest()
-            ->get();
-
-        return view('index')
-            ->with(['posts' => $posts]);
-    }
 
 }
