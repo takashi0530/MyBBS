@@ -22,4 +22,11 @@ class Post extends Model
         // 特定のpostに対してcommentは複数あるため hasMany    classキーワード：クラスの名前が文字列で渡される
         return $this->hasMany(Comment::class);
     }
+
+    // リレーション設定
+    public function postImage()
+    {
+        return $this->hasMany(PostImage::class);
+    }
+
 }

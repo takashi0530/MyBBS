@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\PostImage;
 // PostRequestクラスを使用する
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
@@ -11,14 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-
-    // private $posts = [
-    //     'title a',
-    //     'title b',
-    //     'title c',
-    // ];
-
-
     // トップページ
     public function index(Request $request)
     {
@@ -133,10 +126,61 @@ class PostController extends Controller
         // レコードをINSERTする
         $post->save();
 
+        // アップロードしたファイルをサーバーに保存する（名前はランダム）
+        // $request->file('file')->store('');
+
+        // アップロードしたもともとのファイル名を取得
+        // $file_name = $request->file('file')->getClientOriginalName();
+
+        // アップロードしたファイルに名前をつけて保存する
+        // $request->file('file')->storeAs('public', $file_name);
+
+        // アップロードした複数ファイルを配列に代入
+        $files = $request->file('file');
+
+        // アップロードされたファイルがない場合トップページへリダイレクト
+        if ($files === null) {
+            return redirect()
+                ->route('posts.index');
+        }
+
+        // アップロードしたファイルの情報をDBに保存
+        $postImage = new PostImage();
+
+        // 最後にINSERTしたpostテーブルのレコードidを取得
+        $postImage->post_id = $post->id;
+
+        // アップロードした複数ファイルをひとつずつサーバーに保存する
+        foreach ($files as $key => $file) {
+            $file_count = $key + 1;
+            $file_name = date('Ymd-His-') . $file_count . '.' . $file->getClientOriginalExtension();
+
+            // オリジナルの画像名を取得
+            // $file_name = $file->getClientOriginalName();
+
+            // 画像をサーバに保存する
+            $file->storeAs('public', $file_name);
+
+            // ファイルのアップロード情報をINSERTするための準備
+            $insert_data[$key]['post_id']    = $post->id;
+            $insert_data[$key]['name']       = $file_name;
+            $insert_data[$key]['type']       = $file->getClientMimeType();
+            $insert_data[$key]['size']       = $file->getSize();
+            $insert_data[$key]['created_at'] = date('Y-m-d H:i:s');
+            $insert_data[$key]['updated_at'] = date('Y-m-d H:i:s');
+        }
+
+        // 複数のファイルのアップロード情報をまとめてINSERTする
+        DB::table('post_images')
+            ->insert($insert_data);
+
         // トップページへリダイレクト
         return redirect()
             ->route('posts.index');
     }
+
+
+
 
     // 記事編集
     public function edit(Post $post)
