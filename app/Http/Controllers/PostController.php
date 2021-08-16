@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Models\PostImage;
 // PostRequestクラスを使用する
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
+
+// 定数ファイルを読み込む
+use App\Consts\Consts;
 
 
 class PostController extends Controller
@@ -56,8 +58,8 @@ class PostController extends Controller
 
         return view('index')
             ->with([
-                'posts' => $posts,
-                'sort' => $sort,
+                'posts'   => $posts,
+                'sort'    => $sort,
                 'keyword' => $keyword
             ]);
     }
@@ -144,27 +146,45 @@ class PostController extends Controller
                 ->route('posts.index');
         }
 
-        // アップロードしたファイルの情報をDBに保存
-        $postImage = new PostImage();
+        // アップロードファイルのバリデーション処理
+        foreach ($files as $key => $file) {
+            // 同時アップロード数を検証
+            if ($key === array_key_first($files) && count($files) > Consts::ALLOWED_FILE_UPLOAD_COUNT) {
+                return back()
+                    ->withInput()
+                    ->with('count_error', '同時にアップロードできる画像は３枚までです');
+            }
 
-        // 最後にINSERTしたpostテーブルのレコードidを取得
-        $postImage->post_id = $post->id;
+            // mimeタイプが妥当か検証
+            if (!in_array($file->getMimeType(), Consts::ALLOWED_MIME)) {
+                // 直前の画面にリダイレクトさせる
+                return back()
+                    ->withInput()
+                    ->with('mime_error', 'アップロードできるファイルは【 jpg, jpeg, png, gif 】のみです');
+            }
+
+            // ファイルサイズを検証
+            if ($file->getSize() > Consts::ALLOWED_FILE_UPLOAD_SIZE_10) {
+                return back()
+                    ->withInput()
+                    ->with('size_error', 'アップロードできるファイルは、1ファイルにつき10MB以下です');
+            }
+        }
 
         // アップロードした複数ファイルをひとつずつサーバーに保存する
         foreach ($files as $key => $file) {
             $file_count = $key + 1;
-            $file_name = date('Ymd-His-') . $file_count . '.' . $file->getClientOriginalExtension();
 
-            // オリジナルの画像名を取得
-            // $file_name = $file->getClientOriginalName();
+            // ファイル名   ex) 20210816-105250-3.gif
+            $file_name = date('Ymd-His-') . $file_count . '.' . $file->getClientOriginalExtension();
 
             // 画像をサーバに保存する
             $file->storeAs('public', $file_name);
 
-            // ファイルのアップロード情報をINSERTするための準備
+            // ファイルのアップロード情報をINSERTするための配列を準備
             $insert_data[$key]['post_id']    = $post->id;
             $insert_data[$key]['name']       = $file_name;
-            $insert_data[$key]['type']       = $file->getClientMimeType();
+            $insert_data[$key]['type']       = $file->getMimeType();
             $insert_data[$key]['size']       = $file->getSize();
             $insert_data[$key]['created_at'] = date('Y-m-d H:i:s');
             $insert_data[$key]['updated_at'] = date('Y-m-d H:i:s');

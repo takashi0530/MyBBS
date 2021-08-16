@@ -228,6 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // 定数ファイルのエイリアス（呼び出し省略のための記述）
+        'Consts' => App\Consts\Consts::class
     ],
 
 ];

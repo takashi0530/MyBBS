@@ -34,13 +34,23 @@
                 <textarea name="body" id="" cols="" rows="" class="border border-gray-600 rounded-sm shadow">{{ old('body') }}</textarea>
             </label>
 
-            {{-- アップロード --}}
-            <input type="file" name="file[]" multiple>
-
             {{-- バリデーションに引っかかった場合のメッセージ --}}
             @error('body')
                 <div class="error">{{ $message }}</div>
             @enderror
+
+            {{-- アップロード --}}
+            <input type="file" name="file[]" accept=".jpg, .jpeg, .gif, .png" multiple>
+
+            {{-- バリデーションに引っかかった場合のメッセージ --}}
+            @if (session('count_error'))
+                <div class="error ">{{ session('count_error') }}</div>
+            @elseif (session('mime_error'))
+                <div class="error ">{{ session('mime_error') }}</div>
+            @elseif (session('size_error'))
+                <div class="error ">{{ session('size_error') }}</div>
+            @endif
+
         </div>
 
         <div class="form-button">
