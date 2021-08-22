@@ -43,12 +43,8 @@
             <input type="file" name="file[]" accept=".jpg, .jpeg, .gif, .png" multiple>
 
             {{-- バリデーションに引っかかった場合のメッセージ --}}
-            @if (session('count_error'))
-                <div class="error ">{{ session('count_error') }}</div>
-            @elseif (session('mime_error'))
-                <div class="error ">{{ session('mime_error') }}</div>
-            @elseif (session('size_error'))
-                <div class="error ">{{ session('size_error') }}</div>
+            @if (session('error_message'))
+                <div class="error ">{{ session('error_message') }}</div>
             @endif
 
         </div>

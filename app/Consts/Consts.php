@@ -5,7 +5,7 @@ namespace App\Consts;
 class Consts
 {
     // 同時ファイルアップロード数
-    const ALLOWED_FILE_UPLOAD_COUNT = 3;
+    const ALLOWED_FILE_UPLOAD_COUNT = 5;
 
     // 許可しているファイルアップロードサイズ
     const ALLOWED_FILE_UPLOAD_SIZE_10 = 1024 * 1024 * 10;

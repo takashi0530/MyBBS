@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-// PostRequestクラスを使用する
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
+use App\Library\Validate;
 
 // 定数ファイルを読み込む
 use App\Consts\Consts;
@@ -88,8 +88,16 @@ class PostController extends Controller
         // Implicit Binding  を使用すると、以下の処理が不要になる (web.phpのルートで指定されたidと該当のレコードが紐付けられ、コントローラー内で$postとして使用することができる)
         // $post = Post::findOrFail($id);
 
+        // 投稿に紐付いた画像を取得 TODO 2021/08/17
+        // $post_images = DB::table('post_images')
+        //     ->where('post_id', '=', $post->id);
+        // pr($post->postImage);
+
         return view('posts.show')
-            ->with(['post' => $post]);
+            ->with([
+                'post' => $post,
+                'post_images' => $post->postImage
+            ]);
     }
 
 
@@ -146,28 +154,23 @@ class PostController extends Controller
                 ->route('posts.index');
         }
 
+        // 同時アップロード数を検証
+        if (count($files) > Consts::ALLOWED_FILE_UPLOAD_COUNT) {
+            return back()
+                ->withInput()
+                ->with('error_message', '同時にアップロードできる画像は5枚までです');
+        }
+
         // アップロードファイルのバリデーション処理
         foreach ($files as $key => $file) {
-            // 同時アップロード数を検証
-            if ($key === array_key_first($files) && count($files) > Consts::ALLOWED_FILE_UPLOAD_COUNT) {
-                return back()
-                    ->withInput()
-                    ->with('count_error', '同時にアップロードできる画像は３枚までです');
-            }
 
-            // mimeタイプが妥当か検証
-            if (!in_array($file->getMimeType(), Consts::ALLOWED_MIME)) {
-                // 直前の画面にリダイレクトさせる
-                return back()
-                    ->withInput()
-                    ->with('mime_error', 'アップロードできるファイルは【 jpg, jpeg, png, gif 】のみです');
-            }
+            // ファイルを検証する
+            list($result, $error_message) = Validate::checkImage($file);
 
-            // ファイルサイズを検証
-            if ($file->getSize() > Consts::ALLOWED_FILE_UPLOAD_SIZE_10) {
+            if (!$result) {
                 return back()
                     ->withInput()
-                    ->with('size_error', 'アップロードできるファイルは、1ファイルにつき10MB以下です');
+                    ->with('error_message', $error_message);
             }
         }
 

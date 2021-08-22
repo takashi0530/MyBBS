@@ -28,6 +28,23 @@
 
     <p>{!! nl2br(e($post->body)) !!}</p>
 
+    {{-- 投稿画像の表示 --}}
+    @forelse ($post_images as $post_image)
+        @if (file_exists('storage/' . $post_image->name))
+            @if ($loop->first)
+                <div class="flex space-x-8 space-y-8 items-center place-items-center justify-center flex-wrap">
+            @endif
+            <div><img src="{{ asset('storage/' . $post_image->name) }}" alt="投稿画像" class="w-52"></div>
+            @if ($loop->last)
+                </div>
+            @endif
+        @else
+            <p>【画像が存在しません】</p>
+        @endif
+    @empty
+        <p>【投稿された画像はありません】</p>
+    @endforelse
+
     <h2>コメント</h2>
         <ul>
             <li>

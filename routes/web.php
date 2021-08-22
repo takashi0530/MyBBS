@@ -63,11 +63,3 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
 Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy'])
     ->name('comments.destroy')
     ->where('comment', '[0-9]+');
-
-// ファイルアップロード
-// Route::resource('/upload', [UploadController::class, 'index']);
-    // ->name('upload.index');
-
-
-
-Route::resource('/upload', 'UploadController');
