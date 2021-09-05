@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
-use App\Http\Controllers\UploadController;
+use App\Http\Controllers\MailSendController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,3 +64,20 @@ Route::post('/posts/{post}/comments', [CommentController::class, 'store'])
 Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy'])
     ->name('comments.destroy')
     ->where('comment', '[0-9]+');
+
+
+// ログテスト
+Route::get('/log', function() {
+    // [2021-08-30 15:14:14] local.INFO: something happens!
+    logger()->info('something happens!');
+    Log::channel('stack')->error('なにかエラーが発生しました');
+});
+
+
+// メール送信テスト （Mailファサードを使用する場合）
+Route::get('/mail', [MailSendController::class, 'index'])
+    ->name('mail.index');
+
+// メール送信テスト （Mailableクラスを使用する場合）
+Route::get('/mail_send', [MailSendController::class, 'send'])
+    ->name('mail.send');

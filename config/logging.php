@@ -37,6 +37,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
+            // 'channels' => ['single', 'slack'], // slackに通知したい場合
             'channels' => ['single'],
             'ignore_exceptions' => false,
         ],
