@@ -6,6 +6,9 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MailSendController;
 
+// サービスコンテナテスト
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -81,3 +84,17 @@ Route::get('/mail', [MailSendController::class, 'index'])
 // メール送信テスト （Mailableクラスを使用する場合）
 Route::get('/mail_send', [MailSendController::class, 'send'])
     ->name('mail.send');
+
+
+
+// サービスコンテナテスト
+// app()->bind('myName', function() {
+//     return 'にしむらです';
+// });
+
+// dd(app());
+// $name = app()->make('myName');
+// dd($name);
+
+// サービスコンテナテスト
+Route::get('/test', [TestController::class, 'index']);
