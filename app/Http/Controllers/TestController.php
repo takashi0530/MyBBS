@@ -12,6 +12,7 @@ class TestController extends Controller
 
     public function index()
     {
+        pr('aaa');
         // 依存関係がある場合における、通常のクラスのインスタンス化方法
         // $classB = new ClassB();
         // $classA = new ClassA($classB);
@@ -86,6 +87,8 @@ class Service
 
     // ...
 }
+
+
 
 
 

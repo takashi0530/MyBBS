@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MailSendController;
+use App\Http\Controllers\TestCsvController;
+use App\Http\Controllers\CsvController;
 
 // サービスコンテナテスト
 use App\Http\Controllers\TestController;
@@ -85,8 +87,6 @@ Route::get('/mail', [MailSendController::class, 'index'])
 Route::get('/mail_send', [MailSendController::class, 'send'])
     ->name('mail.send');
 
-
-
 // サービスコンテナテスト
 // app()->bind('myName', function() {
 //     return 'にしむらです';
@@ -98,3 +98,10 @@ Route::get('/mail_send', [MailSendController::class, 'send'])
 
 // サービスコンテナテスト
 Route::get('/test', [TestController::class, 'index']);
+
+// CSVダウンロード テスト
+Route::get('/test_csv', [TestCsvController::class, 'index']);
+
+// 投稿記事のCSVダウンロード
+Route::get('/csv_download', [CsvController::class, 'index'])
+    ->name('csv.download');
