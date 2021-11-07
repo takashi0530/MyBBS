@@ -29,6 +29,12 @@ class TestController extends Controller
 
     }
 
+    // vueコンポーネントテスト
+    public function vue_test()
+    {
+        return view('vue_test');
+    }
+
 
 }
 
@@ -87,6 +93,7 @@ class Service
 
     // ...
 }
+
 
 
 

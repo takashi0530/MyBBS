@@ -32,10 +32,10 @@ class CsvController extends Controller
         // 記事を全件取得する
         $posts_data = DB::table('posts')->orderBy('id', 'asc')->get();
 
-        // CSVの新規ファイルを作成する
+        // CSVの新規ファイルを作成し、パスをプロパティにセット
         $this->csvFilePath = $this->createCsvFIle();
 
-        // パス情報からファイル名をプロパティに定義
+        // パス情報からファイル名をプロパティにセット
         $this->csvFileName = basename($this->csvFilePath);
 
         // 取得した全ての投稿データを1行ずつ処理する

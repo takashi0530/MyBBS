@@ -105,3 +105,6 @@ Route::get('/test_csv', [TestCsvController::class, 'index']);
 // 投稿記事のCSVダウンロード
 Route::get('/csv_download', [CsvController::class, 'index'])
     ->name('csv.download');
+
+// vueコンポーネントテスト
+Route::get('/vue_test', [TestController::class, 'vue_test']);

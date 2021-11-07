@@ -15,4 +15,10 @@ mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         // tailwindcssを読み込み
         require('tailwindcss')
-    ]);
+    ])
+    // vueの読み込み
+    .vue()
+    // ホットリロードの設定（ブラウザの自動更新）
+    .browserSync('localhost:8590')
+    // 読み込みファイルのバージョニング設定（キャッシュ対策）
+    .version();
