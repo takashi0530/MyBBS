@@ -16,8 +16,11 @@
     {{-- tailwindcss 読み込み --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-    {{-- どの階層にいてもcssを適用できるようにする --}}
+    {{-- url() は、指定されたパスへ、アプリのルートからドメインを含めた完全なURLを生成してくれる関数    どの階層にいてもcssを適用できるようにする --}}
     <link rel="stylesheet" href="{{ url('css/style.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
 
 </head>
 <body>
@@ -25,6 +28,9 @@
     <div class="container">
         {{ $slot }}
     </div>
+
+    {{-- vueコンポーネント   resources/js/app.js  の読み込み --}}
+    <script src="{{ asset(mix('/js/app.js')) }}"></script>
 
 </body>
 </html>

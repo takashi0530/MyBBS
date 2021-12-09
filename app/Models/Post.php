@@ -23,10 +23,27 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    // リレーション設定
+    // リレーション設定 （postsテーブルから → post_imagesテーブルへの1体多リレーション）
     public function postImage()
     {
         return $this->hasMany(PostImage::class);
+    }
+
+    // リレーション設定 （postsテーブルから → bookmarksテーブルへの1対1リレーション）
+    public function bookmarks()
+    {
+        // return $this->belongsToMany(Bookmark::class, 'bookmark');
+        // return $this->belongsToMany(Bookmark::class);
+        return $this->hasOne(Bookmark::class);
+    }
+
+    // 投稿を渡すとその投稿がブックマーク済みかどうかを返す
+    public function isBookmarkedBy(Post $post)
+    {
+        // post.idとbookmarks.post_idが紐付いている場合、紐付いているレコードの個数を返す(bool型にキャストして返す)
+        return $this->bookmarks
+            ? (bool)$this->bookmarks->where('post_id', $post->id)->count()
+            : false;
     }
 
 }

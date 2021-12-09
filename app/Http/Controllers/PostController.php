@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Models\Bookmark;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
 use App\Library\Validate;
@@ -92,6 +93,10 @@ class PostController extends Controller
         // $post_images = DB::table('post_images')
         //     ->where('post_id', '=', $post->id);
         // pr($post->postImage);
+
+
+        // TODO 2021-11-23
+        // pr($post->bookmarks);
 
         return view('posts.show')
             ->with([
@@ -243,5 +248,101 @@ class PostController extends Controller
             ->route('posts.index');
     }
 
+    // 特定の投稿をブックマークに登録する
+    public function bookmark(Post $post, Request $request)
+    {
+        // ajax通信でない場合はトップへリダイレクト
+        if (!$request->ajax()) {
+            return redirect()
+                ->route('posts.index');
+        }
+
+        // ブックマークに登録する
+        $bookmark = new Bookmark();
+        $bookmark->post_id = $post->id;
+        $bookmark->user_id = 0; // 現在ユーザー機能はないため仮の0にする
+        $bookmark->save();
+
+        return [
+            // 直前にインサートしたbookmarks.id
+            'bookmark_id' => $bookmark->id,
+            'post_id'     => $post->id,
+            'result'      => true,
+            'comment'     => 'ブックマークを登録しました',
+        ];
+    }
+
+    // 特定の投稿のブックマークを解除する
+    public function unbookmark(Post $post, Request $request)
+    {
+        // ajax通信でない場合はトップへリダイレクト
+        if (!$request->ajax()) {
+            return redirect()
+                ->route('posts.index');
+        }
+
+        $bookmark = new Bookmark();
+
+        // 削除するbookmark.idを取得する
+        $bookmark_id = $bookmark
+            ->where('post_id', $post->id)
+            ->value('id');
+
+        // ブックマークを解除する
+        $result = $bookmark
+            ->where('post_id', $post->id)
+            ->delete();
+
+        if (!$result) {
+            return [
+                'result'      => false,
+                'comment'     => 'ブックマークの解除に失敗しました'
+            ];
+        }
+
+        return [
+            'bookmark_id' => $bookmark_id,
+            'post_id'     => $post->id,
+            'result'      => true,
+            'comment'     => 'ブックマークを解除しました'
+        ];
+    }
+
+
+    // ブックマークの登録もしくはブックマークの解除の共通メソッド (使用していない)
+    public function bookmark_or_unbookmark(Post $post, Request $request)
+    {
+        // ajax通信でない場合はトップへリダイレクト
+        if (!$request->ajax()) {
+            return redirect()
+                ->route('posts.index');
+        }
+
+        $result = '';
+        $bookmark = new Bookmark();
+
+        // bookmarksテーブルにpost_idがすでにが存在しているかのチェック
+        $bookmark_check = $bookmark->where('post_id', $post->id)->exists();
+
+        // 既にブックマーク済みならブックマークを削除する
+        if ($bookmark_check) {
+            $bookmark->where('post_id', $post->id)->delete();
+            $result = 'ブックマークを解除しました';
+        }
+
+        // まだブックマークをしていなければブックマークする
+        if (!$bookmark_check) {
+            $bookmark->post_id = $post->id;
+            $bookmark->user_id = 0; // 現在ユーザー機能はないため仮の0にする
+            $bookmark->save();
+            $result = 'ブックマークを登録しました';
+        }
+
+        return [
+            'post_id' => $post->id,
+            'comment' => $result,
+            'check'   => $bookmark_check
+        ];
+    }
 
 }

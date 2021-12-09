@@ -5,10 +5,12 @@ import { createApp } from 'vue';
 
 // vueコンポーネントである、ExampleComponentをインポート
 import ExampleComponent from './components/ExampleComponent.vue';
+import BookmarkComponent from './components/BookmarkComponent.vue';
 
 // vueコンポーネントをマウントする
 createApp({
     components: {
-        ExampleComponent
+        ExampleComponent,
+        BookmarkComponent
     }
 }).mount('#app');

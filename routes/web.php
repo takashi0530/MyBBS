@@ -37,10 +37,19 @@ Route::get('/posts/{post}', [PostController::class, 'show'])
     // postのパラメーターを数字のみしか受け付けないという制限をつける → 文字列はスルーされるため create が渡ってきてもスルーする
     ->where('post', '[0-9]+');
 
+// 投稿個別ページからお気に入りボタンが押されたとき（登録）HTTPメソッドでルート判定
+Route::patch('/posts/{post}/bookmark', [PostController::class, 'bookmark'])
+    ->name('posts.bookmark')
+    ->where('post', '[0-9]+');
+
+// 投稿個別ページからお気に入りボタンが押されたとき（解除）HTTPメソッドでルート判定
+Route::delete('/posts/{post}/bookmark', [PostController::class, 'unbookmark'])
+    ->name('posts.unbookmark')
+    ->where('post', '[0-9]+');
+
 // 新規投稿ページ表示
 Route::get('/posts/create', [PostController::class, 'create'])
     ->name('posts.create');
-
 
 // 新規投稿ページから投稿したとき  ※データを新規作成するときはPOST形式
 Route::post('/posts/store', [PostController::class, 'store'])
@@ -70,6 +79,9 @@ Route::delete('/comments/{comment}/destroy', [CommentController::class, 'destroy
     ->name('comments.destroy')
     ->where('comment', '[0-9]+');
 
+// 投稿記事のCSVダウンロード
+Route::get('/csv_download', [CsvController::class, 'index'])
+    ->name('csv.download');
 
 // ログテスト
 Route::get('/log', function() {
@@ -77,7 +89,6 @@ Route::get('/log', function() {
     logger()->info('something happens!');
     Log::channel('stack')->error('なにかエラーが発生しました');
 });
-
 
 // メール送信テスト （Mailファサードを使用する場合）
 Route::get('/mail', [MailSendController::class, 'index'])
@@ -101,10 +112,6 @@ Route::get('/test', [TestController::class, 'index']);
 
 // CSVダウンロード テスト
 Route::get('/test_csv', [TestCsvController::class, 'index']);
-
-// 投稿記事のCSVダウンロード
-Route::get('/csv_download', [CsvController::class, 'index'])
-    ->name('csv.download');
 
 // vueコンポーネントテスト
 Route::get('/vue_test', [TestController::class, 'vue_test']);

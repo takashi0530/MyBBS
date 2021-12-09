@@ -9,6 +9,7 @@
 <body>
     <div id="app">
         <example-component></example-component>
+        <bookmark-component></bookmark-component>
     </div>
     {{-- キャッシュによる未反映を防止するためにidをふる {{ mix('ファイル名') }} --}}
     <script src="{{ mix('js/app.js') }}"></script>

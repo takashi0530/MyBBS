@@ -1,3 +1,4 @@
+
 {{-- 次のレイアウトを読み込み  resources/views/components/layout.blade.php --}}
 <x-layout>
 
@@ -14,7 +15,28 @@
         <span>{{ $post->title }}</span>
 
         {{-- 投稿の編集ボタン ※$postのデータをrouteに渡している --}}
-        <a href="{{ route('posts.edit', $post)}}">[編集する]</a>
+        <a href="{{ route('posts.edit', $post)}}">
+            <i class="fas fa-edit"></i>
+        </a>
+
+        <?php
+
+        ?>
+        {{-- お気に入り登録ボタン --}}
+        <div id="app">
+            {{-- vueの親コンポーネント --}}
+            <bookmark-component
+                {{-- 現在ブックマーク済みかどうかの値が入る（bool） --}}
+                :initial-is-bookmarked-by='@json($post->isBookmarkedBy($post))'
+                {{-- 非同期通信先のURL 通信先で現在の投稿に紐づくブックマーク状況を取得するため、第2引数でpostモデルを渡す --}}
+                endpoint="{{ route('posts.bookmark', $post) }}"
+            ></bookmark-component>
+        </div>
+
+        <?php
+            // pr($post);
+        ?>
+
 
         {{-- 記事削除ボタン [X] --}}
         <form method="post" action="{{ route('posts.destroy', $post) }}" id="delete_post">
@@ -22,9 +44,12 @@
             @method('DELETE')
             {{-- フォームは必ず@csrfをつける --}}
             @csrf
-            <button class="button">[X]</button>
+            <button class="button">
+                <i class="far fa-times-circle"></i>
+            </button>
         </form>
     </h1>
+
 
     <p>{!! nl2br(e($post->body)) !!}</p>
 
@@ -71,7 +96,9 @@
                         @method('delete')
                         {{-- フォームは必ず@csrfをつける --}}
                         @csrf
-                        <button class="button">[x]</button>
+                        <button class="button">
+                            <i class="fas fa-backspace"></i>
+                        </button>
                     </form>
                 </li>
             @endforeach
