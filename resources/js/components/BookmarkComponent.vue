@@ -91,6 +91,9 @@ export default {
 }
 </script>
 <style>
+[v-cloak] {
+    display: none;
+}
 /* お気に入りボタンの色を黄色に変える */
 .yellow-text {
     color: #c4ba07;

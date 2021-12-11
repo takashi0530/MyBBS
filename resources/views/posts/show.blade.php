@@ -67,43 +67,47 @@
             <p>【画像が存在しません】</p>
         @endif
     @empty
-        <p>【投稿された画像はありません】</p>
+        <p class="my-5">【投稿された画像はありません】</p>
     @endforelse
 
     <h2>コメント</h2>
-        <ul>
-            <li>
-                {{-- routeの第２引数$postはパラメーターとして渡せる --}}
-                <form method="post" action="{{ route('comments.store', $post) }}" class="comment-form">
+    <div class="mb-5">
+        {{-- routeの第２引数$postはパラメーターとして渡せる --}}
+        <form method="post" action="{{ route('comments.store', $post) }}" class="comment-form">
+            {{-- フォームは必ず@csrfをつける --}}
+            @csrf
+            {{-- <input type="text" name="body"> --}}
+            <input type="text" name="body" class="border border-gray-600 rounded-sm shadow">
+            {{-- <button>コメントを追加</button> --}}
+            <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm">
+                コメントを追加
+            </button>
+        </form>
+    </div>
+    <ul>
+
+        {{-- created_atで降順に並べる --}}
+        @forelse ($post->comments()->latest()->get() as $comment)
+            <li class="justify-between">
+                {{ $comment->body }}
+
+                {{-- コメント削除ボタン [X] --}}
+                <form action="{{ route('comments.destroy', $comment)}}" method="post" class="delete-comment">
+                    @method('delete')
                     {{-- フォームは必ず@csrfをつける --}}
                     @csrf
-                    {{-- <input type="text" name="body"> --}}
-                    <input type="text" name="body" class="border border-gray-600 rounded-sm shadow">
-                    {{-- <button>コメントを追加</button> --}}
-                    <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm w-2/12">
-                        コメントを追加
+                    <button class="button">
+                        <i class="fas fa-backspace"></i>
                     </button>
                 </form>
             </li>
+        @empty
+            <li>
+                【コメントはありません】
+            </li>
+        @endforelse
 
-            {{-- created_atで降順に並べる --}}
-            @foreach ($post->comments()->latest()->get() as $comment)
-                <li>
-                    {{ $comment->body }}
-
-                    {{-- コメント削除ボタン [X] --}}
-                    <form action="{{ route('comments.destroy', $comment)}}" method="post" class="delete-comment">
-                        @method('delete')
-                        {{-- フォームは必ず@csrfをつける --}}
-                        @csrf
-                        <button class="button">
-                            <i class="fas fa-backspace"></i>
-                        </button>
-                    </form>
-                </li>
-            @endforeach
-
-        </ul>
+    </ul>
 
     <script>
         'use strict'

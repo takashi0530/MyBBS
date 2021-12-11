@@ -5,21 +5,28 @@
         My BBS
     </x-slot>
 
-    <h1 class="mb-8">
+    <h1 class="mb-8 title-bar">
         <span>
             <a href="{{ route('posts.index') }}">My BBS</a>
         </span>
-        <a href="{{ route('posts.create') }}">
-            <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm">
-                新規登録
-            </button>
-        </a>
+        <div>
+            <a href="{{ route('bookmark.index') }}">
+                <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm">
+                    お気に入り一覧
+                </button>
+            </a>
+            <a href="{{ route('posts.create') }}">
+                <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm ml-2">
+                    新規登録
+                </button>
+            </a>
+        </div>
     </h1>
 
     {{-- <p>投稿を検索</p> --}}
     <form method="get" action="{{ route('posts.index', Request::query()) }}" class="comment-form mb-8">
         <input type="text" name="keyword" value="{{ $keyword }}" placeholder="投稿を検索" class="border border-gray-600 rounded-sm shadow">
-        <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm w-2/12">
+        <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm w-2/12 ml-2">
             検索
         </button>
         @if ($sort === 'title')
@@ -49,9 +56,10 @@
                 </span>
             </li>
         @empty
-            <li>postがありません</li>
+            <li>【投稿がありません】</li>
         @endforelse
     </ul>
+
     <div class="text-right mb-8">
         <a href="{{ route('csv.download') }}">
             <button class="bg-white hover:bg-gray-100 text-gray-800 py-3 px-4 border border-gray-600 rounded-sm shadow text-sm w-3/12">

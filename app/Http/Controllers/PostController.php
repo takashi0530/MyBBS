@@ -94,10 +94,6 @@ class PostController extends Controller
         //     ->where('post_id', '=', $post->id);
         // pr($post->postImage);
 
-
-        // TODO 2021-11-23
-        // pr($post->bookmarks);
-
         return view('posts.show')
             ->with([
                 'post' => $post,

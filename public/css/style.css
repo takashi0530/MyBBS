@@ -40,7 +40,8 @@ ul {
 }
 
 li {
-    line-height: 1.6;
+    line-height: 40px;
+    height: 40px;
     margin-bottom: 8px;
     display: flex;
 }
@@ -119,7 +120,10 @@ i.fa-backspace {
     margin-bottom: 8px;
 }
 
-
+.title-bar span {
+    margin-left: 0;
+    margin-right: auto;
+}
 
 
 

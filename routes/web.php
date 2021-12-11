@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\MailSendController;
 use App\Http\Controllers\TestCsvController;
 use App\Http\Controllers\CsvController;
@@ -46,6 +47,10 @@ Route::patch('/posts/{post}/bookmark', [PostController::class, 'bookmark'])
 Route::delete('/posts/{post}/bookmark', [PostController::class, 'unbookmark'])
     ->name('posts.unbookmark')
     ->where('post', '[0-9]+');
+
+// お気に入り一覧画面
+Route::get('/bookmarks', [BookmarkController::class, 'index'])
+    ->name('bookmark.index');
 
 // 新規投稿ページ表示
 Route::get('/posts/create', [PostController::class, 'create'])
