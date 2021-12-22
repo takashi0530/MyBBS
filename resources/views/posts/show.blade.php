@@ -1,6 +1,7 @@
 
 {{-- 次のレイアウトを読み込み  resources/views/components/layout.blade.php --}}
 <x-layout>
+    <div id="app">
 
     {{-- ページのtitleを設定 --}}
     <x-slot name="title">
@@ -19,24 +20,14 @@
             <i class="fas fa-edit"></i>
         </a>
 
-        <?php
-
-        ?>
         {{-- お気に入り登録ボタン --}}
-        <div id="app">
-            {{-- vueの親コンポーネント --}}
-            <bookmark-component
-                {{-- 現在ブックマーク済みかどうかの値が入る（bool） --}}
-                :initial-is-bookmarked-by='@json($post->isBookmarkedBy($post))'
-                {{-- 非同期通信先のURL 通信先で現在の投稿に紐づくブックマーク状況を取得するため、第2引数でpostモデルを渡す --}}
-                endpoint="{{ route('posts.bookmark', $post) }}"
-            ></bookmark-component>
-        </div>
-
-        <?php
-            // pr($post);
-        ?>
-
+        {{-- vueの親コンポーネント --}}
+        <bookmark-component
+            {{-- 現在ブックマーク済みかどうかの値が入る（bool） --}}
+            :initial-is-bookmarked-by='@json($post->isBookmarkedBy($post))'
+            {{-- 非同期通信先のURL 通信先で現在の投稿に紐づくブックマーク状況を取得するため、第2引数でpostモデルを渡す --}}
+            endpoint="{{ route('posts.bookmark', $post) }}"
+        ></bookmark-component>
 
         {{-- 記事削除ボタン [X] --}}
         <form method="post" action="{{ route('posts.destroy', $post) }}" id="delete_post">
@@ -48,24 +39,34 @@
                 <i class="far fa-times-circle"></i>
             </button>
         </form>
-    </h1>
 
+    </h1>
 
     <p>{!! nl2br(e($post->body)) !!}</p>
 
     {{-- 投稿画像の表示 --}}
     @forelse ($post_images as $post_image)
+
         @if (file_exists('storage/' . $post_image->name))
             @if ($loop->first)
                 <div class="flex space-x-8 space-y-8 items-center place-items-center justify-center flex-wrap">
             @endif
-            <div><img src="{{ asset('storage/' . $post_image->name) }}" alt="投稿画像" class="w-52"></div>
+            {{-- <div><img src="{{ asset('storage/' . $post_image->name) }}" alt="投稿画像" class="w-52"></div> --}}
+            {{-- 画像拡大 --}}
+            <viewer-component
+                {{-- :aaa='@json('abcd')' --}}
+                :initial-img-name='`{{ asset('storage/' . $post_image->name) }}`'
+                :show-mask='false'
+            >
+            </viewer-component>
+
             @if ($loop->last)
                 </div>
             @endif
         @else
             <p>【画像が存在しません】</p>
         @endif
+
     @empty
         <p class="my-5">【投稿された画像はありません】</p>
     @endforelse
@@ -109,6 +110,7 @@
 
     </ul>
 
+    </div>
     <script>
         'use strict'
         {
